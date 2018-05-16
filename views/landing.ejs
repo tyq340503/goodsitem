@@ -11,11 +11,13 @@
     <div class="container">
         <% if(error && error.length > 0){ %>
             <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <%= error %>
             </div>
         <% } %>
         <% if(success && success.length > 0){ %>
             <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <%= success %>
             </div>
         <% } %>
@@ -23,7 +25,7 @@
     
     <div id="landing-header">
  		<h1>Welcome to StevensYelp!</h1>
-		<a href="/restaurants" class="btn btn-lg btn-success">View All restaurants</a>
+		<a href="/restaurants" class="btn btn-lg btn-success">View All items</a>
     </div>
     
     <ul class="slideshow">
@@ -33,5 +35,5 @@
       <li></li>
       <li></li>
     </ul>
-
+    <!-- <% include partials/resource %> -->
 <% include partials/footer %>

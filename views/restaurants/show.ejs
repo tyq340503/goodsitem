@@ -1,8 +1,14 @@
 <% include ../partials/header %>
+<!-- <% include ../partials/sidebar %> -->
+<link rel="stylesheet" href="/assets/css/comment.css">
     <div class="row">
         <div class="col-md-3">
             <h2>Location:</h2>
-            <div id="map"></div>
+            <% if(restaurant.location){ %>
+                <div id="map"></div>
+            <%}else{%>
+                <div></div>
+            <%}%>
         </div>
         
         <div class="col-md-9">
@@ -23,32 +29,65 @@
                 </div>
             </div>
             <div class="well">
-                <div class="text-right">
+                <h4 class="pyzz">chat with other(<%= restaurant.comments.length %>)</h4>
+                <!-- <div class="text-right">
                     <a class="btn btn-success" href="/restaurants/<%= restaurant._id %>/comments/new">Add New Comment</a>
-                </div>
+                </div> -->
                 <hr>
                 <% restaurant.comments.forEach(function(comment){ %>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <strong><%= comment.author.username %></strong>
-                            
-                            <p>
-                                <%= comment.text %> 
-                            </p>
-                        <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
-                            <a class="btn btn-xs btn-warning" 
-                               href="/restaurants/<%=restaurant._id %>/comments/<%=comment._id %>/edit">Edit</a>
-                            <form id="delete-form" action="/restaurants/<%=restaurant._id %>/comments/<%=comment._id %>?_method=DELETE" method="POST">
-                                <input type="submit" class="btn btn-xs btn-danger" value="Delete">
-                            </form>
-                        <% } %>
+                    <div class="pl">
+                        <div class="tx">
+                            <!-- <a href="http://www.jq22.com/mem744867"> -->
+                            <a href="#">    
+                                <img src="http://www.jq22.com/tx/12.png">
+                            </a>
                         </div>
-                    </div>
+                        <ul class="plbg">
+                            <div class="f"> <%= comment.author.username %> <span class="jl">0</span></div>
+                            <div class="r"> <span class="z12">2018/1/17 12:00:47</span></div>
+                            <div class="dr"></div>
+                            </ul>
+                        <ul style="word-wrap: break-word;width: 100%">
+                        <p><%= comment.text %></p>
+                            <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
+                                <a class="btn btn-xs btn-warning hf" 
+                                href="/restaurants/<%=restaurant._id %>/comments/<%=comment._id %>/edit">Edit</a>
+                                <form id="delete-form" action="/restaurants/<%=restaurant._id %>/comments/<%=comment._id %>?_method=DELETE" method="POST">
+                                    <input type="submit" class="btn btn-xs btn-danger" value="Delete">
+                                </form>
+                            <% }else{ %>
+                                <a class="hf" name="51272" onclick="getReply()">Reply</a>
+                            <% } %>
+                            <div class="lyhf"></div>
+                            
+                            <div class="dr"></div>
+                        </ul>
+                    </div>   
                 <% }) %>
+                <div class="in2">
+                    <div id="err" class="alert alert-danger" role="alert" style="display:none"><i class="fa fa-smile-o"></i> you need to login to make the comment</div>
+                    <div id="err2" class="alert alert-warning" role="alert" style="display:none"><i class="fa fa-smile-o"></i> make other comment after 30 seconds</div>
+                    <form action="/restaurants/<%= restaurant._id %>/comments/new" method="POST">
+                        <textarea id="textarea1" style="height:200px; width:100%;" name="comment[text]" placeholder="share something and discuss with others！" spellcheck="false"></textarea>
+                        <div class="r top10">
+                            <button type="submit" id="myButton" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+                                Add New Comment
+                            </button>
+                        </div>
+                    </form>
+                    <div class="dr"></div>
+                </div>
             </div>
         </div>
     </div>
 <script>
+    
+    function getReply(){
+        document.getElementById('textarea1').focus();
+    }   
+    
+</script>
+<script> 
   function initMap() {
     var lat = <%= restaurant.lat %>;
     var lng = <%= restaurant.lng %>;
@@ -76,5 +115,5 @@
   }
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBk4u55etcK0F1YLvjDEg3Z3Myk19OmhXo&callback=initMap"></script>
-
+<% include ../partials/background_s %>
 <% include ../partials/footer %>

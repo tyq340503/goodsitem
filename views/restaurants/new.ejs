@@ -1,29 +1,51 @@
 <% include ../partials/header %>
     <div class="row">
-        <h1 style="text-align: center">Create a New Restaurant</h1>
-        <div style="width: 30%; margin: 25px auto;">
+        <h1 style="text-align: center">Post a New Item</h1>
+        <div style="width: 40%; margin: 25px auto;">
             <form action="/restaurants" method="POST">
                 <div class="form-group">
-                    <label>Restaurant name</label>
+                    <label>Item name<icon style=" color: red; ">*</icon></label>
+                    <!-- <div style=" position: relative; display: table; border-collapse: separate;"></div> -->
+                    <!-- <span class="input-group-addon" style="border-top-left-radius: 0;border-bottom-left-radius: 0;"><span class="glyphicon glyphicon-lock"></span></span> -->
+                    
                     <input class="form-control" type="text" name="name" placeholder="name">
                 </div>
                 <div class="form-group">
-                    <label>Image url</label>
-                    <input class="form-control" type="text" name="image" placeholder="image url">
+                    <label>Image url<icon style="color: red; ">*</icon></label>
+                    <input class="form-control" type="text" id="summernote" name="image" placeholder="image url">
+                    <!-- <input id="input-2" name="input2" type="file" class="projectfile" multiple readonly="false" data-show-upload="false"
+                        data-show-caption="true" data-show-preview="true" data-min-file-count="2" data-allowed-file-extensions='["jpg","png"]'>
+                     -->
+                    <!-- <div class="file-loading">
+                        <input id="kv-explorer" name="image" type="file" multiple>
+                    </div> -->
                 </div>
                 <div class="form-group">
-                    <label>Description</label>
-                    <input class="form-control" type="text" name="description" placeholder="description">
+                    <label>Description<icon style="color: red;">*</icon></label>
+                    <textarea class="form-control" type="text" name="description" placeholder="add some description"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="location">Location</label>
                     <input class="form-control" type="text" name="location" id="location" placeholder="Yosemite National Park, CA">
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+                    <button class="btn btn-lg btn-primary btn-block">Submit</button>
                 </div>
             </form>
-            <a href="/restaurants">Go Back</a>
+            <p class="p-bottom-w3ls">Nothing to post? Click <a href="/restaurants">here</a> to Go Back</p>
+            
         </div>
     </div>
-<% include ../partials/footer %>
+<!-- 
+    <script>
+        $(document).ready(function () {
+            $("#kv-explorer").fileinput({
+                'theme': 'explorer-fa',
+                'uploadUrl': '#',
+                overwriteInitial: false,
+                initialPreviewAsData: true
+            });
+        })
+    </script> -->
+    <% include ../partials/new_back %>
+    <% include ../partials/footer %>

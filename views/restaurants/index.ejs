@@ -1,29 +1,142 @@
 <% include ../partials/header %>
-
+<% include ../partials/resource %>
      <header class="jumbotron">
          <div class="container">
              <h1>Welcome To StevensYelp!</h1>
-             <p>View our favorite restaurants around Stevens!</p>
+             <p>View our favorite things around Stevens!</p>
              <p>
                 <a class="btn btn-primary btn-large" href="/restaurants/new">Add New Restaurant</a>
              </p>
          </div>
      </header>
      
-     <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+    <!-- <div class="btn-group btn-group-justified" data="btn-grid" style="margin-bottom: 2em;" role="group" aria-label="...">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-default">Left</button>
+            </div>
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-default">Middle</button>
+            </div>
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-default">Right</button>
+            </div>
+    </div> -->
+    <div class="row text-center" style="display:flex; flex-wrap: wrap;">
         <% restaurants.forEach(function(restaurant){ %>
+            <a href="/restaurants/<%= restaurant._id %>">
             <div class="col-md-3 col-sm-6">
-                <div class="thumbnail">
-                   <img src="<%= restaurant.image %>">
-                   <div class="caption">
-                       <h4><%= restaurant.name %></h4>
+                <div class="thumbnail transform transition">
+                    <% if(restaurant.image.slice(0,4)=='http'){ %>
+                        <div class="transform_img">
+                            <img src="<%= restaurant.image %>" class="transition fine_img" style="height: 13em;">
+                        </div>
+                    <% }else{%>
+                        <img src="/assets/img/err/err.jpg" style="height: 13em;">
+                    <% }%>
+                   <div class="caption" style="overflow: hidden;">
+                       <h4 class="good_name"><%= restaurant.name %></h4>
+                       <small class="good_description fl">
+                           <%= restaurant.description %>
+                        </small>
                    </div>
-                   <p>
-                       <a href="/restaurants/<%= restaurant._id %>" class="btn btn-primary">More Info>></a>
-                   </p>
+                   <!-- <p>
+                       <a href="/restaurants/<%= restaurant._id %>" class="btn btn-primary">More Info <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                    </p> -->
+                           <div class="cover-stat">
+                               <div style="position:absolute">
+                                   <i class="fa fa-comments"></i><span class="f10"> &nbsp;<%= restaurant.comments.length %></span>
+                                   <!-- <i class="fa fa-heart"></i><span class="f10"> &nbsp;39</span> -->
+                                   <% if(restaurant.location != null){ %>
+                                    <i class="fa fa-map-marker"></i><span class="f10"> &nbsp;<%= restaurant.location.split(',')[0] %></span>
+                                   <% }else{%>  
+                                    <i class="fa fa-map-marker"></i><span class="f10"> &nbsp;null</span>
+                                   <% }%> 
+                               </div>
+                            <div class="cover-yh">
+                                <a href="#" data-container="body" data-toggle="popover" aria-describedby="popover" data-placement="top" data-content="<%= restaurant.author.username %>" data-original-title="" title="">
+                                    <i class="fa fa-user-secret"></i>
+                                </a>
+                            </div>
+                        </div>
                 </div>
             </div>
+        </a>
         <% }); %>
     </div>
+    <!-- <div id="myGrid" style="width: 100%;height: 200px;" class="ag-fresh"></div> -->
+    
 
+<script>
+    var checkgrid = "left"    
+    var columnDefs = [
+        {headerName: "item name", field: "number", editable:true,checkboxSelection: true},
+        {headerName: "description:", field: "info"},
+        {headerName: "type", field: "item type"},
+        {headerName: "name", field: "author name"}
+    ];
+    var rowData = [
+        {make: "Toyota", model: "Celica", price: 35000},
+        {make: "Ford", model: "Mondeo", price: 32000},
+        {make: "Porsche", model: "Boxter", price: 72000}
+    ];    
+    var gridOptions = {
+        columnDefs: columnDefs ,
+        rowData: rowData,
+        rowSelection: 'single',//这个是设置单行选择
+    };  
+    document.addEventListener("DOMContentLoaded", function() {
+
+        // lookup the container we want the Grid to use
+        var eGridDiv = document.querySelector('#myGrid');
+
+        // create the grid passing in the div to use together with the columns & data we want to use
+        new agGrid.Grid(eGridDiv, gridOptions);
+    });     
+    $('.cover-yh').on("mouseenter",function(){
+        let html=`<div class="block" style="position: absolute;
+            top: -2em;
+            right: 0px;
+            /* height: 100%; */
+            background: rgba(5, 0, 0, 0.5);
+            padding: 0.1rem;
+            border-radius: 10px;"><p style="margin: 0;">${$(this)[0].childNodes[1].attributes[5].value}</p></div>`
+        //console.log($(this)[0].childNodes[1].attributes[5].value);
+        $(this).append(html).find(".block").fadeIn(300).fadeOut(2000);
+    }) 
+
+    $("[data='btn-grid']").find('button').on('click',function(e){
+        //console.log(e)
+        if($("[data='btn-grid']").find('button').hasClass('btn-danger')){
+            
+            $("[data='btn-grid']").find('button').removeClass('btn-danger');
+            $(this).addClass('btn-danger'); 
+            checkgrid = $(this)[0].innerText;
+            //console.log($(this)[0].innerText);
+            //$(this).addClass('btn-danger'); 
+            debugger;
+            var requestConfig = {
+                method: "POST",
+                url: "/restaurants",
+                data: JSON.stringify({
+                    data: "grid"
+                })
+            };
+
+            $.ajax(requestConfig).then(function(responseMessage) {
+                console.log(responseMessage);
+            });
+        }else{
+            
+            $(this).addClass('btn-danger'); 
+            checkgrid = $(this)[0].innerText;
+        }
+        
+        
+        //$(this).addClass('btn-danger');
+        //console.log($(e.target.classList))
+    })
+</script>
+<% include ../partials/background_i %>
+<% include ../partials/index_footer %>
+<% include ../partials/top %>
 <% include ../partials/footer %>

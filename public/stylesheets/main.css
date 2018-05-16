@@ -19,3 +19,31 @@
     height: 400px;
     width: 100%;
 }
+
+.r_contanier {
+    width: 35%; 
+    margin: 2em auto;
+    background: rgba(41, 39, 39, 0.46);
+    -webkit-box-shadow: 0px 35px 44px -22px rgba(0,0,0,0.72);
+    -moz-box-shadow: 0px 35px 44px -22px rgba(0,0,0,0.72);
+    box-shadow: 0px 35px 44px -22px #1f181b;
+    padding: 60px 40px;
+}
+
+.p-bottom-w3ls {
+    font-size: 14px;
+    color: #eee;
+    margin-top: 1em;
+    text-align: center;
+    text-transform: none;
+    letter-spacing: 1px;
+}
+
+.p-bottom-w3ls a {
+    color: #df5799;
+    outline: none;
+    text-decoration: none;
+    margin-right: 8px;
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+}

@@ -19,30 +19,37 @@ router.get("/new", middleware.isLoggedIn, function(req, res){
 });
 
 // Comments create
-router.post("/", middleware.isLoggedIn, function(req,res){
+router.post("/new", middleware.isLoggedIn, function(req,res){
     // find restaurant by ID
-       Restaurant.findById(req.params.id, function(err, restaurant){
-       if(err){
-           console.log(err);
-           res.redirect("/restaurants");
-       } else {
-        Comment.create(req.body.comment, function(err, comment){
-           if(err){
-               req.flash("error", "Something went wrong");
-               console.log(err);
-           } else {
-               //add username and id to comment
-               comment.author.id = req.user._id;
-               comment.author.username = req.user.username;
-               //save comment
-               comment.save();
-               restaurant.comments.push(comment);
-               restaurant.save();
-               req.flash("success", "Successfully added comment");
-               res.redirect('/restaurants/' + restaurant._id);
-           }
-        });
-       }
+    console.log(req.body.comment);
+
+    Restaurant.findById(req.params.id, function(err, restaurant){
+    if(err){
+        console.log(err);
+        res.redirect("/restaurants");
+    } else {
+    Comment.create(req.body.comment, function(err, comment){
+        if(err){
+            req.flash("error", "Something went wrong");
+            console.log(err);
+        } else {
+            //add username and id to comment
+            if(req.body.comment.text.length == 0){
+                req.flash("error", "comment can't be empty");
+                res.redirect('/restaurants/' + restaurant._id);
+            }else{
+                comment.author.id = req.user._id;
+                comment.author.username = req.user.username;
+                //save comment
+                comment.save();
+                restaurant.comments.push(comment);
+                restaurant.save();
+                req.flash("success", "Successfully added comment");
+                res.redirect('/restaurants/' + restaurant._id);
+            }
+        }
+    });
+    }
    });
 })
 
