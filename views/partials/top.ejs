@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="/assets/css/top.css">
+<div id="back-top">
+    <a class="styled-button"><i class="fas fa-arrow-up"></i>TOP</a>
+</div>
+<!--底部 内容-->
+<div id="footer"></div>
+<script>
+    $(document).ready(function () {
+
+        // hide #back-top first  
+        $("#back-top").hide();
+
+        // fade in #back-top  
+        $(function () {
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 100) {
+                    $('#back-top').fadeIn();
+                } else {
+                    $('#back-top').fadeOut();
+                }
+            });
+
+            // scroll body to 0px on click  
+            $('#back-top').click(function () {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 'fast');
+                return false;
+            });
+        });
+
+    });  
+</script>

@@ -1,0 +1,33 @@
+<% include ../partials/header %>
+<header class="jumbotron">
+    <div class="container">
+        <h1>Welcome To StevensYelp!</h1>
+        <% if(restaurants.length > 0){ %>
+            <p><%= restaurants.length%> result</p>
+        <% }else{ %>
+            <p>no result</p>
+        <% }%>    
+        
+        <p><a href="/restaurants">Back To Index</a></p>
+    </div>
+</header>
+<div class="row text-center" style="display:flex; flex-wrap: wrap;">
+    <% restaurants.forEach(function(restaurant){ %>
+        <div class="col-md-3 col-sm-6">
+            <div class="thumbnail">
+                <% if(restaurant.image.slice(0,4)=='http'){ %>
+                    <img src="<%= restaurant.image %>" style="height: 13em;">
+                <% }else{%>
+                    <img src="/assets/img/err/err.jpg" style="height: 13em;">
+                <% }%>
+                <div class="caption">
+                    <h4><%= restaurant.name %></h4>
+                </div>
+                <p>
+                    <a href="/restaurants/<%= restaurant._id %>" class="btn btn-primary">More Info>></a>
+                </p>
+            </div>
+        </div>
+    <% }); %>
+</div>
+<% include ../partials/footer %>

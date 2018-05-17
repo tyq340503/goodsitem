@@ -1,0 +1,65 @@
+<% include ../partials/header %> 
+<link rel="stylesheet" href="/assets/css/personal.css">
+
+<div class="row">
+    <h1 style="text-align: center">personal info</h1>
+    <div style="width: 60%; margin: 25px auto;">
+        <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+                <% if(currentUser && restaurants.length != 0){ %>
+                    <div class="section video empty full-rows host post_things">                        
+                <% }else{%>
+                    <div class="section video empty full-rows host non_post_things">
+                <% }%>         
+                    <h3 class="section-title" style="color: #000; font-size: 20px; font-weight: 400; line-height: 33px;  padding: 0 0 15px; position: relative;">
+                        <a href="#" class="t" style=" display: inline-block;">my post</a>
+                        
+                        <% if(currentUser && restaurants.length != 0){ %>
+                            <span class="count">(<%= restaurants.length %>)</span>
+                        <% }else{%>
+                        <span class="count">(0)</span>
+                        <div class="sec-empty-hint sec-empty-hint-host" style="width: 100%;  left: 400px;  color: #99a2aa;  font-size: 12px;  position: absolute;  top: 0; left: 300px;">
+                            you do not post any things yet
+                        </div>
+                        <% }%>  
+                    </h3>
+                </div>
+                <div class="content clearfix">
+                        <% if(currentUser && restaurants.length != 0){ %>
+                            
+                            <% restaurants.forEach(function(restaurant){ %>
+                                <div class=" col-sm-6">
+                                    <div class="thumbnail">
+                                        <% if(restaurant.image.slice(0,4)=='http'){ %>
+                                            <img src="<%= restaurant.image %>" style="height: 13em;">
+                                        <% }else{%>
+                                            <img src="/assets/img/err/err.jpg" style="height: 13em;">
+                                        <% }%>
+                                    <div class="caption">
+                                        <h4><%= restaurant.name %></h4>
+                                    </div>
+                                    <p>
+                                        <a href="/restaurants/<%= restaurant._id %>" class="btn btn-primary">More Info <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                                    </p>
+                                    </div>
+                                </div>
+                            <% }); %>   
+                            
+                        <% } %>  
+                    </div>
+                <!-- <div class="section video empty full-rows host" style="width:100%; border-bottom: 1px solid #eee; margin-bottom: 17px; position: relative; display: inline-block;">
+                    <h3 class="section-title" style=" right: 200px;color: #000; font-size: 20px; font-weight: 400; line-height: 33px;  padding: 0 0 15px; position: relative;">
+                        <a href="#" class="t"  style=" display: inline-block;">my comment</a>
+                        <span class="count">(0)</span>
+                        <div class="sec-empty-hint sec-empty-hint-host" style="width: 100%;  left: 400px;  color: #99a2aa;  font-size: 12px;  position: absolute;  top: 0; left: 300px;">
+                            you do not have any comment
+                        </div>
+                    </h3>
+                    <div class="content clearfix"></div>
+                </div> -->
+  
+        </div>
+        <a href="/restaurants">Go Back</a>
+    </div>
+</div>
+
+<% include ../partials/footer %> 
