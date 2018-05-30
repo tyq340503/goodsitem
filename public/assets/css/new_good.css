@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    border: none;
+  }
+
+  .new_back {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    z-index:-1;
+    background:blue;
+  }
+  .new_back {
+    background: radial-gradient(hsl(211, 73%, 55%), hsl(211, 67%, 51%));
+    position: relative;
+    filter: blur(7px);
+    z-index:-1;
+  }
+  .drop {
+    height: 30px;
+    width: 30px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    position: absolute;
+    z-index:-1;
+  }

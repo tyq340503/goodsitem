@@ -1,0 +1,23 @@
+#back-top{
+    position: fixed; 
+    bottom:20px; 
+    right: 2%; 
+    z-index: 100;
+}  
+
+.styled-button{
+    height: 3em;
+    background: #fff;
+    width: 3em;
+    display: block;
+    border-radius: 0.7em;
+    text-decoration: none;
+    line-height: 3em;   
+}
+
+.styled-button:hover{
+    color:#fff;
+    text-decoration: none;
+    background: rgb(85, 85, 255);
+    transition: all .4s ease-out;
+}    

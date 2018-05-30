@@ -1,0 +1,16 @@
+.post_things{
+    width:100%; 
+    border-bottom: 1px solid #eee; 
+    margin-bottom: 17px; 
+    position: relative;
+    display: inline-block;
+}
+
+.non_post_things{
+    right: 200px; 
+    width:100%; 
+    border-bottom: 1px solid #eee; 
+    margin-bottom: 17px; 
+    position: relative; 
+    display: inline-block;
+}

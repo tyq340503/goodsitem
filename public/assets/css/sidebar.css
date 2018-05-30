@@ -1,0 +1,48 @@
+.icon-article-col, .icon-article-pl {
+    text-align: center;
+    font-style: normal;
+    line-height: 95px;
+    color: #999;
+    font-size: 12px;
+}
+.icon-article-pl {
+    background-position: -178px -253px;
+}
+.icon-article {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+.icon {
+    display: inline-block;
+    vertical-align: text-bottom;
+    background-image: url(../image/icon.png);
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 20px;
+}
+.article-left-btn-group.is-sticky {
+    position: fixed;
+    top: 90px;
+    bottom: auto;
+}
+
+.article-left-btn-group {
+    width: 60px;
+    float: left;
+    position: absolute;
+    z-index: 220;
+    bottom: 80px;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+.article-left-btn-group ul li {
+    width: 60px;
+    cursor: pointer;
+    background-color: #fafafa;
+    border-bottom: 1px solid #f0f0f0;
+}
