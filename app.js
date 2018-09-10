@@ -10,7 +10,7 @@ var express = require("express"),
     Comment = require("./models/comment"),
     User = require("./models/user")
 //seedDB      = require("./seeds")
-//  require routes
+// require routes
 var commentRoutes = require("./routes/comments"),
     restaurantRoutes = require("./routes/restaurants"),
     indexRoutes = require("./routes/index");
