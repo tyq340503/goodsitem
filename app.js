@@ -16,7 +16,14 @@ var commentRoutes = require("./routes/comments"),
     indexRoutes = require("./routes/index");
 
 
-mongoose.connect("mongodb://yada:ftd2009@ds019836.mlab.com:19836/stevensyelp");
+// mongoose.connect("mongodb://yada:ftd2009@ds019836.mlab.com:19836/stevensyelp");
+mongoose.connect("mongodb://tyq340503:abc123@ds131903.mlab.com:31903/ecommerce",function(err){
+    if(err){
+        console.log(err);
+    }else{
+        console.log("connect success");
+    }
+})
 //mongoose.connect("mongodb://localhost/stevens_yelp");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
