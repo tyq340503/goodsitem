@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
 
 var restaurantSchema = new mongoose.Schema({
     name: String,

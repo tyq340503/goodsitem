@@ -8,11 +8,12 @@ var express = require("express"),
     methodOverride = require("method-override"),
     restaurant = require("./models/restaurant"),
     Comment = require("./models/comment"),
-    User = require("./models/user")
+    User = require("./models/user");
 //seedDB      = require("./seeds")
 // require routes
 var commentRoutes = require("./routes/comments"),
     restaurantRoutes = require("./routes/restaurants"),
+    apiRoutes = require('./api/api'),
     indexRoutes = require("./routes/index");
 
 
@@ -59,6 +60,7 @@ app.use("/", indexRoutes);
 app.use("/restaurants", restaurantRoutes);
 app.use("/restaurants/:id", restaurantRoutes);
 app.use("/restaurants/:id/comments", commentRoutes);
+app.use('/api', apiRoutes);
 
 app.use(function (req, res) {
     // var url = req.originalUrl;
