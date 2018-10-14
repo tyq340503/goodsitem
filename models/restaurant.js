@@ -7,6 +7,7 @@ var restaurantSchema = new mongoose.Schema({
     location: String,
     lat: Number,
     lng: Number,
+    category: { type: Schema.Types.ObjectId, ref: 'Category'},
     author: {
         id:{
             type: mongoose.Schema.Types.ObjectId,
