@@ -1,11 +1,11 @@
 var express = require("express");
-var router  = express.Router();
+var router = express.Router();
 var passport = require("passport");
 var User = require("../models/user");
 var middleware = require("../middleware");
 var Restaurant = require("../models/restaurant");
 
-router.use(function(req, res, next){
+router.use(function (req, res, next) {
     var url = req.originalUrl;
     // if (url != "/register" && url != "/" && url != "/login") {
     //     var err = new Error('not found');
@@ -14,24 +14,24 @@ router.use(function(req, res, next){
     // }
     console.log(url);
     next();
- });
+});
 
 //landing route
-router.get("/",function(req,res){
+router.get("/", function (req, res) {
     res.render("landing");
 });
 
 // show register for
-router.get("/register",function(req,res){
+router.get("/register", function (req, res) {
     res.render("register");
 })
 
-router.get("/info/:username",middleware.isLoggedIn,function(req,res){
+router.get("/info/:username", middleware.isLoggedIn, function (req, res) {
 
     res.render("personal/info");
 })
 
-router.get("/personal/:id",middleware.isLoggedIn,function(req,res){
+router.get("/personal/:id", middleware.isLoggedIn, function (req, res) {
     //console.log(req.params);
     // Restaurant.find({'author.id':req.params.id},function (err, allRestaurants) {
     //     if (err) {
@@ -41,40 +41,43 @@ router.get("/personal/:id",middleware.isLoggedIn,function(req,res){
     //         res.render("personal", { restaurants: allRestaurants});
     //     }
     // })
-    Restaurant.find({'author.id':req.params.id}).populate("comments").exec(function (err, allRestaurants) {
+    Restaurant.find({ 'author.id': req.params.id }).populate("comments").exec(function (err, allRestaurants) {
         if (err) {
             console.log(err);
         } else {
             console.log(allRestaurants);
-            res.render("personal", { restaurants: allRestaurants});
+            res.render("personal", { restaurants: allRestaurants });
         }
     })
 })
 
 // sign up POST
-router.post("/register", function(req,res){
-    var newUser = new User({username: req.body.username});
+router.post("/register", function (req, res) {
+    var newUser = new User({ username: req.body.username, email: req.body.email });
     //
-    if(req.body.password === req.body.repassword){
-        User.register(newUser, req.body.password, function(err, user){
-            if(err){
-                req.flash("error",err.message);
+    if (req.body.password === req.body.repassword) {
+        User.register(newUser, req.body.password, function (err, user) {
+            if (err) {
+                req.flash("error", err.message);
                 res.redirect("/register");
             }
-            passport.authenticate("local")(req,res,function(){      //local is one kind of strategy
-                req.flash("success", "Welcome to StevensYelp, "+user.username);
+            passport.authenticate("local")(req, res, function () {      //local is one kind of strategy
+                req.flash("success", "Welcome to StevensYelp, " + user.username);
                 res.redirect("/restaurants");
             })
         })
-        
-    }else{
-        req.flash("error","two password is not equal");
+
+    } else {
+        req.flash("error", "two password is not equal");
         res.redirect("/register");
     }
 })
 
 // Log in
-router.get("/login",function(req,res){
+router.get("/login", function (req, res) {
+    // console.log(req.currentUser);
+    // console.log(req.user)
+    if (req.user) return res.redirect('/');
     res.render("login");
 })
 
@@ -83,16 +86,16 @@ router.post("/login", passport.authenticate("local",
     {
         successRedirect: "/restaurants",
         failureRedirect: "/login",
-        failureFlash:true
-    }), function(req,res){
-      
-});
+        failureFlash: true
+    }), function (req, res) {
+
+    });
 
 //logout route
-router.get("/logout", function(req, res){
-   req.logout();
-   req.flash("success", "Logged you out!");
-   res.redirect("/restaurants");
+router.get("/logout", function (req, res) {
+    req.logout();
+    req.flash("success", "Logged you out!");
+    res.redirect("/restaurants");
 });
 
 //error
