@@ -7,6 +7,7 @@ var express = require("express"),
     LocalStrategy = require("passport-local"),
     methodOverride = require("method-override"),
     restaurant = require("./models/restaurant"),
+    secret = require('./config/secret'),
     Comment = require("./models/comment"),
     User = require("./models/user");
 //seedDB      = require("./seeds")
@@ -18,7 +19,7 @@ var commentRoutes = require("./routes/comments"),
 
 
 // mongoose.connect("mongodb://yada:ftd2009@ds019836.mlab.com:19836/stevensyelp");
-mongoose.connect("mongodb://tyq340503:abc123@ds131903.mlab.com:31903/ecommerce",function(err){
+mongoose.connect(secret.database,function(err){
     if(err){
         console.log(err);
     }else{
@@ -38,7 +39,7 @@ app.use(flash());
 
 //  passport configuration
 app.use(require("express-session")({
-    secret: "Some restaurants around Stevens I like",
+    secret: secret.secretKey,
     resave: false,
     saveUninitialized: false
 }));
@@ -74,7 +75,7 @@ app.use(function (req, res) {
 });
 
 
-app.listen(3000, function () {
+app.listen(secret.port, function () {
     console.log("The StevensYelp Server Has Started!");
 });
 
