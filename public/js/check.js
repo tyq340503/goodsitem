@@ -26,9 +26,14 @@ window.onload = function(){
         return num1==num2 ? true : false ;
     };
 
-    $(".modal").each( function(){
-        $(this).wrap('<div class="overlay"></div>')
-    });
+    // $(".modal").each( function(){
+    //     $(this).wrap('<div class="overlay"></div>')
+    // });
+
+        // $("#close").on('click', function(e){
+        //     // success;
+        //     $('#modal').modal('hide');
+        // })
 
     $(".close-modal").on('click', function(e){
         e.preventDefault();
@@ -44,45 +49,45 @@ window.onload = function(){
         
     });	
 
-    setTimeout(
-        signform.submit(function (event) {  
-        debugger;
-        event.preventDefault();
-        //console.log('1');
-         username = username.value;
-         password = password.value;
-         repassword = repassword.value;
+    // setTimeout( 
+    //     signform.submit(function (event) {  
+    //     debugger;
+    //     event.preventDefault();
+    //     //console.log('1');
+    //      username = username.value;
+    //      password = password.value;
+    //      repassword = repassword.value;
 
-        if(!checkusername(username)){
-            var element = $('<div class="alert alert-danger" role="alert">username should not be empty</div>');
-            $('#danger').append(element);
-            $('div[role="alert"]').fadeOut(1500);
-            return false;
-        }
-        if(!checkpassword(password)){
-            var element = $('<div class="alert alert-danger" role="alert">password length should more than 6</div>');
-            $('#danger').append(element);
-            $('div[role="alert"]').fadeOut(1500);
-            return false;
-            // $(".modal").parents(".overlay").addClass("open");
-            // setTimeout( function(){
-            //      $("#modal1").addClass("open");
-            // }, 350);
-        }
+    //     if(!checkusername(username)){
+    //         var element = $('<div class="alert alert-danger" role="alert">username should not be empty</div>');
+    //         $('#danger').append(element);
+    //         $('div[role="alert"]').fadeOut(1500);
+    //         return false;
+    //     }
+    //     if(!checkpassword(password)){
+    //         var element = $('<div class="alert alert-danger" role="alert">password length should more than 6</div>');
+    //         $('#danger').append(element);
+    //         $('div[role="alert"]').fadeOut(1500);
+    //         return false;
+    //         // $(".modal").parents(".overlay").addClass("open");
+    //         // setTimeout( function(){
+    //         //      $("#modal1").addClass("open");
+    //         // }, 350);
+    //     }
 
-        var requestConfig = {
-            method: "POST",
-            url: "/register",
-            contentType: "application/json",
-            data: JSON.stringify({
-                username: username,
-                password: password,
-                repassword: repassword
-            })
-        };
-        $.ajax(requestConfig).then(function (responseMessage) {
-            debugger;
-            console.log(responseMessage);
-        });
-    }),2000)
+    //     var requestConfig = {
+    //         method: "POST",
+    //         url: "/register",
+    //         contentType: "application/json",
+    //         data: JSON.stringify({
+    //             username: username,
+    //             password: password,
+    //             repassword: repassword
+    //         })
+    //     };
+    //     $.ajax(requestConfig).then(function (responseMessage) {
+    //         debugger;
+    //         console.log(responseMessage);
+    //     });
+    // }),2000)
 }

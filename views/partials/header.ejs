@@ -4,14 +4,19 @@
 <head>
     <title>StevensYelp</title>
     <link rel="icon" href="/assets/img/title/title.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
     <link rel="stylesheet" href="/stylesheets/main.css">
     <link rel="stylesheet" href="/stylesheets/fileinput.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
         crossorigin="anonymous"></script>
+    <script src="/js/check.js"></script>
     <script src="/js/function.js"></script>
     <script src="/js/fileinput.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 </head>
@@ -32,7 +37,8 @@
                 <ul class="nav navbar-nav navbar-right">
                     <% if(!currentUser){ %>
                         <li>
-                            <a href="/login"><span class="glyphicon glyphicon-log-in" style="top: 0.1em; left: -1em;"></span>Login</a>
+                            <a href="/login">
+                                <span class="glyphicon glyphicon-log-in" style="top: 0.1em; left: -1em;"></span>Login</a>
                         </li>
                         <li>
                             <a href="/register">Sign Up</a>
@@ -49,10 +55,12 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                     <li>
-                                        <a href="/personal/<%= currentUser._id %>"><span class="glyphicon glyphicon-home" style="top: 0.1em; left: -1em;"></span>My Channel</a>
+                                        <a href="/personal/<%= currentUser._id %>">
+                                            <span class="glyphicon glyphicon-home" style="top: 0.1em; left: -1em;"></span>My Channel</a>
                                     </li>
                                     <li>
-                                        <a href="/restaurants/new"><span class="glyphicon glyphicon-th-list" style="top: 0.1em; left: -1em;"></span>post something</a>
+                                        <a href="/restaurants/new">
+                                            <span class="glyphicon glyphicon-th-list" style="top: 0.1em; left: -1em;"></span>post something</a>
                                     </li>
                                     <!-- <li>
                                         <a href="/info/<%= currentUser.username %>">
@@ -79,14 +87,21 @@
     <div class="container">
 
         <% if(error && error.length > 0){ %>
-            <div class="alert alert-danger" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+            <div class=" alert alert-danger" id="modal" role="alert">
+                <button type="button" id="close" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <%= error %>
             </div>
+
             <% } %>
                 <% if(success && success.length > 0){ %>
-                    <div class="alert alert-success" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+                    <div class=" alert alert-success" id="modal" role="alert">
+                        <button type="button" id="close" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                         <%= success %>
                     </div>
                     <% } %>

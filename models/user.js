@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var bcrypt = require('bcrypt-nodejs');
+var validator = require('validator');
 var crypto = require('crypto');
 var Schema = mongoose.Schema;
 var passportLocalMongoose = require("passport-local-mongoose");
@@ -7,7 +8,18 @@ var passportLocalMongoose = require("passport-local-mongoose");
 var UserSchema = new mongoose.Schema({
     username: String,
     password: String,
-    email: { type: String, unique: true, lowercase: true },
+    email: {
+        type: String,
+        unique: true,
+        required: [true, 'Email is required!'],
+        trim: true,
+        validate: {
+            validator(email) {
+                return validator.isEmail(email)
+            },
+            message: '{value} is not a valid email'
+        },
+    },
     profile: {
         name: { type: String, default: '' },
         picture: { type: String, default: '' }
