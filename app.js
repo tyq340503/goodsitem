@@ -71,7 +71,9 @@ app.use("/", indexRoutes);
 app.use("/restaurants", restaurantRoutes);
 app.use("/restaurants/:id", restaurantRoutes);
 app.use("/restaurants/:id/comments", commentRoutes);
-app.use('/api', apiRoutes);
+app.use('/api', apiRoutes, (err, data) => {
+    console.log("222");
+});
 
 app.use(function (req, res) {
     // var url = req.originalUrl;
