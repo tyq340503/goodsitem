@@ -6,9 +6,11 @@ var express = require("express"),
     passport = require("passport"),
     LocalStrategy = require("passport-local"),
     methodOverride = require("method-override"),
+    middlewares = require('./middleware'),
     restaurant = require("./models/restaurant"),
     secret = require('./config/secret'),
     Comment = require("./models/comment"),
+    Category = require('./models/category'),
     User = require("./models/user");
 //seedDB      = require("./seeds")
 // require routes
@@ -19,10 +21,10 @@ var commentRoutes = require("./routes/comments"),
 
 
 // mongoose.connect("mongodb://yada:ftd2009@ds019836.mlab.com:19836/stevensyelp");
-mongoose.connect(secret.database,function(err){
-    if(err){
+mongoose.connect(secret.database, function (err) {
+    if (err) {
         console.log(err);
-    }else{
+    } else {
         console.log("connect success");
     }
 })
@@ -56,6 +58,14 @@ app.use(function (req, res, next) {
     res.locals.success = req.flash("success");   //
     next();
 });
+app.use(middlewares.cartNum);
+app.use(function (req, res, next) {
+    Category.find({}, function (err, categories) {
+        if (err) return next(err);
+        res.locals.categories = categories;
+        next();
+    });
+});
 //  节省“/xxx”前缀的写法
 app.use("/", indexRoutes);
 app.use("/restaurants", restaurantRoutes);
@@ -66,9 +76,9 @@ app.use('/api', apiRoutes);
 app.use(function (req, res) {
     // var url = req.originalUrl;
     // if (url != "/register" && url != "/" && url != "/login") {
-        var err = new Error('not found');
-        err.status = 404;
-        res.render("./error/404");
+    var err = new Error('not found');
+    err.status = 404;
+    res.render("./error/404");
     // }
     console.log("error");
     //next();
