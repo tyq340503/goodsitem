@@ -135,6 +135,7 @@ router.get('/products/:id', function (req, res, next) {
         .find({ category: req.params.id })
         .populate('category')
         .exec(function (err, products) {
+            // console.log(products);
             if (err) return next(err);
             res.render('main/category', {
                 products: products
@@ -144,7 +145,7 @@ router.get('/products/:id', function (req, res, next) {
 
 router.get('/product/:id', function (req, res, next) {
     Product.findById({ _id: req.params.id }, function (err, product) {
-        console.log(product);
+        // console.log(product);
         if (err) return next(err);
         res.render('main/product', {
             product: product
@@ -152,7 +153,57 @@ router.get('/product/:id', function (req, res, next) {
     });
 });
 
+router.post('/payment', function (req, res, next) {
+    var stripeToken = req.body.stripeToken;
+    var currentCharges = Math.round(req.body.stripeMoney * 100);
+    stripe.customers.create({
+        source: stripeToken,
+    }).then(function (customer) {
+        return stripe.charges.create({
+            amount: currentCharges,
+            currency: 'usd',
+            customer: customer.id
+        });
+    }).then(function (charge) {
+        async.waterfall([
+            function (callback) {
+                Cart.findOne({ owner: req.user._id }, function (err, cart) {
+                    callback(err, cart);
+                });
+            },
+            function (cart, callback) {
+                User.findOne({ _id: req.user._id }, function (err, user) {
+                    if (user) {
+                        for (var i = 0; i < cart.items.length; i++) {
+                            user.history.push({
+                                item: cart.items[i].item,
+                                paid: cart.items[i].price
+                            });
+                        }
 
+                        user.save(function (err, user) {
+                            if (err) return next(err);
+                            callback(err, user);
+                        });
+                    }
+                });
+            },
+            function (user) {
+                Cart.update({ owner: user._id }, { $set: { items: [], total: 0 } }, function (err, updated) {
+                    if (updated) {
+                        res.redirect('/profile');
+                    }
+                });
+            }
+        ], function (err, data) {
+            console.log('11');
+            if (err) {
+                next(err);
+            }
+            res.json({ message: data });
+        });
+    })
+});
 
 module.exports = router;
 
