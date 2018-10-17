@@ -5,6 +5,8 @@ var User = require("../models/user");
 var middleware = require("../middleware");
 var Category = require('../models/category');
 var Restaurant = require("../models/restaurant");
+var Product = require('../models/product');
+var Cart = require('../models/cart');
 
 router.use(function (req, res, next) {
     var url = req.originalUrl;
@@ -142,6 +144,7 @@ router.get('/products/:id', function (req, res, next) {
 
 router.get('/product/:id', function (req, res, next) {
     Product.findById({ _id: req.params.id }, function (err, product) {
+        console.log(product);
         if (err) return next(err);
         res.render('main/product', {
             product: product

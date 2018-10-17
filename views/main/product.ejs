@@ -34,7 +34,7 @@
                     <input type="text" name="priceValue" id="priceValue" class="form-control" value="<%= product.price %>"></input>
                 </div>
 
-                <% if (user)  { %>
+                <% if (currentUser)  { %>
                     <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
                     <% } else { %>
                         <a href='/signup' class="btn btn-warning btn-lg">Signup to begin buying!</a>
