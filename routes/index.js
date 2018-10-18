@@ -8,6 +8,8 @@ var Restaurant = require("../models/restaurant");
 var Product = require('../models/product');
 var Cart = require('../models/cart');
 
+var stripe = require('stripe')('sk_test_SGDazZx02g66TCWvhN3NKBLb');
+
 router.use(function (req, res, next) {
     var url = req.originalUrl;
     // if (url != "/register" && url != "/" && url != "/login") {
@@ -152,6 +154,25 @@ router.get('/product/:id', function (req, res, next) {
         });
     });
 });
+
+
+router.get('/cart', function (req, res, next) {
+    console.log(req.user);
+    console.log(req.currentUser);
+    Cart
+        .findOne({ owner: req.user._id })
+        .populate('items.item')
+        .exec(function (err, foundCart) {
+            if (err) return next(err);
+            res.render('main/cart', {
+                foundCart: foundCart,
+                message: req.flash('remove')
+            });
+        }).then(function(err){
+            console.log(err);
+        });
+});
+
 
 router.post('/payment', function (req, res, next) {
     var stripeToken = req.body.stripeToken;
