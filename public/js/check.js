@@ -50,7 +50,7 @@ window.onload = function () {
     });
 
 
-    Stripe.setPublishableKey('pk_test_s5MCQ9ddIg5tuYexEzKCyIxj');
+    Stripe.setPublishableKey('pk_test_AiF0OoUwpZt7ow4ptXULZ1Y4');
 
     var opts = {
         lines: 13 // The number of lines to draw

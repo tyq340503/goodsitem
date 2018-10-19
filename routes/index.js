@@ -7,7 +7,7 @@ var Category = require('../models/category');
 var Restaurant = require("../models/restaurant");
 var Product = require('../models/product');
 var Cart = require('../models/cart');
-
+var async = require('async');
 var stripe = require('stripe')('sk_test_SGDazZx02g66TCWvhN3NKBLb');
 
 router.use(function (req, res, next) {
@@ -57,25 +57,53 @@ router.get("/personal/:id", middleware.isLoggedIn, function (req, res) {
 })
 
 // sign up POST
-router.post("/register", function (req, res) {
-    var newUser = new User({ username: req.body.username, email: req.body.email });
-    //
-    if (req.body.password === req.body.repassword) {
-        User.register(newUser, req.body.password, function (err, user) {
-            if (err) {
-                req.flash("error", err.message);
+router.post("/register", function (req, res, next) {
+    async.waterfall([
+        function(callback) {
+            var newUser = new User({
+                username: req.body.username,
+                email: req.body.email,
+            });
+            newUser.profile.picture = newUser.gravatar();
+            //
+            if (req.body.password === req.body.repassword) {
+                User.register(newUser, req.body.password, function (err, user) {
+                    if (err) {
+                        req.flash("error", err.message);
+                        res.redirect("/register");
+                    }
+                    return callback(err, newUser);
+                  
+                })
+        
+            } else {
+                req.flash("error", "two password is not equal");
                 res.redirect("/register");
             }
-            passport.authenticate("local")(req, res, function () {      //local is one kind of strategy
-                req.flash("success", "Welcome to StevensYelp, " + user.username);
-                res.redirect("/restaurants");
-            })
-        })
-
-    } else {
-        req.flash("error", "two password is not equal");
-        res.redirect("/register");
-    }
+        },
+        function(user) {
+            var cart = new Cart();
+            cart.owner = user._id;
+            cart.save(function(err) {
+              if (err) return next(err);
+              req.logIn(user, function(err) {
+                if (err) return next(err);
+                // res.redirect('/profile');
+                passport.authenticate("local")(req, res, function () {      //local is one kind of strategy
+                    req.flash("success", "Welcome to StevensYelp, " + user.username);
+                    res.redirect("/restaurants");
+                })
+                // res.redirect('/restaurants');
+              });
+            });
+          }
+    ], function (err, data) {
+        console.log('register');
+        if (err) {
+            next(err);
+        }
+        res.json({ message: data });
+    })
 })
 
 // Log in
@@ -168,7 +196,7 @@ router.get('/cart', function (req, res, next) {
                 foundCart: foundCart,
                 message: req.flash('remove')
             });
-        }).then(function(err){
+        }).then(function (err) {
             console.log(err);
         });
 });
