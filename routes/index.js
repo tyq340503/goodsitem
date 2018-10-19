@@ -58,12 +58,16 @@ router.get("/personal/:id", middleware.isLoggedIn, function (req, res) {
 
 // sign up POST
 router.post("/register", function (req, res, next) {
+    console.log(req.body);
     async.waterfall([
         function(callback) {
             var newUser = new User({
                 username: req.body.username,
                 email: req.body.email,
             });
+            // var newUser = new User();
+            // newUser.username = req.body.username,
+            // newUser.email = req.body.email;
             newUser.profile.picture = newUser.gravatar();
             //
             if (req.body.password === req.body.repassword) {
@@ -84,12 +88,14 @@ router.post("/register", function (req, res, next) {
         function(user) {
             var cart = new Cart();
             cart.owner = user._id;
+            console.log(user);
+            console.log(req.body);
             cart.save(function(err) {
               if (err) return next(err);
               req.logIn(user, function(err) {
                 if (err) return next(err);
                 // res.redirect('/profile');
-                passport.authenticate("local")(req, res, function () {      //local is one kind of strategy
+                return passport.authenticate("local")(req, res, function () {      //local is one kind of strategy
                     req.flash("success", "Welcome to StevensYelp, " + user.username);
                     res.redirect("/restaurants");
                 })
