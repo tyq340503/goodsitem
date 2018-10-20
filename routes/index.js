@@ -60,7 +60,7 @@ router.get("/personal/:id", middleware.isLoggedIn, function (req, res) {
 router.post("/register", function (req, res, next) {
     console.log(req.body);
     async.waterfall([
-        function(callback) {
+        function (callback) {
             var newUser = new User({
                 username: req.body.username,
                 email: req.body.email,
@@ -77,32 +77,31 @@ router.post("/register", function (req, res, next) {
                         res.redirect("/register");
                     }
                     return callback(err, newUser);
-                  
+
                 })
-        
+
             } else {
                 req.flash("error", "two password is not equal");
                 res.redirect("/register");
             }
         },
-        function(user) {
+        function (user) {
             var cart = new Cart();
             cart.owner = user._id;
-            console.log(user);
-            console.log(req.body);
-            cart.save(function(err) {
-              if (err) return next(err);
-              req.logIn(user, function(err) {
+            // console.log(user);
+            cart.save(function (err) {
                 if (err) return next(err);
-                // res.redirect('/profile');
-                return passport.authenticate("local")(req, res, function () {      //local is one kind of strategy
-                    req.flash("success", "Welcome to StevensYelp, " + user.username);
-                    res.redirect("/restaurants");
-                })
-                // res.redirect('/restaurants');
-              });
+                req.logIn(user, function (err) {
+                    if (err) return next(err);
+                    // res.redirect('/profile');
+                    return passport.authenticate("local")(req, res, function () {      //local is one kind of strategy
+                        req.flash("success", "Welcome to StevensYelp, " + user.username);
+                        res.redirect("/restaurants");
+                    })
+                    // res.redirect('/restaurants');
+                });
             });
-          }
+        }
     ], function (err, data) {
         console.log('register');
         if (err) {
@@ -181,30 +180,69 @@ router.get('/products/:id', function (req, res, next) {
 
 router.get('/product/:id', function (req, res, next) {
     Product.findById({ _id: req.params.id }, function (err, product) {
-        // console.log(product);
-        if (err) return next(err);
+        if (err){
+            // console.log('err');
+            return next(err);
+        }
+        // wrong id will in here
+        if(product == null){
+            return next();
+        }
+        // console.log('err2');
         res.render('main/product', {
             product: product
         });
-    });
+    }).catch((err)=>{
+        // console.log(err);
+        // err in here
+        return next(err);
+    })
 });
 
+router.post('/product/:product_id', function (req, res, next) {
+    if (!req.user) {
+        // req.flash("success", "Logged you out!");
+        return next();
+        // return res.redirect('/login');
+    } else {
+        Cart.findOne({ owner: req.user._id }, function (err, cart) {
+            cart.items.push({
+                item: req.body.product_id,
+                price: parseFloat(req.body.priceValue),
+                quantity: parseInt(req.body.quantity)
+            });
+
+            cart.total = (cart.total + parseFloat(req.body.priceValue)).toFixed(2);
+
+            cart.save(function (err) {
+                if (err) return next(err);
+                return res.redirect('/cart');
+            });
+        });
+    }
+});
 
 router.get('/cart', function (req, res, next) {
-    console.log(req.user);
-    console.log(req.currentUser);
-    Cart
-        .findOne({ owner: req.user._id })
-        .populate('items.item')
-        .exec(function (err, foundCart) {
-            if (err) return next(err);
-            res.render('main/cart', {
-                foundCart: foundCart,
-                message: req.flash('remove')
+    // console.log(req.user);
+    // console.log(req.currentUser);
+    if (!req.user) {
+        // req.flash("success", "Logged you out!");
+        return next();
+        // return res.redirect('/login');
+    } else {
+        Cart
+            .findOne({ owner: req.user._id })
+            .populate('items.item')
+            .exec(function (err, foundCart) {
+                if (err) return next(err);
+                res.render('main/cart', {
+                    foundCart: foundCart,
+                    message: req.flash('remove')
+                });
+            }).then(function (err) {
+                console.log(err);
             });
-        }).then(function (err) {
-            console.log(err);
-        });
+    }
 });
 
 
