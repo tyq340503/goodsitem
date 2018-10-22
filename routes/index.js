@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var passport = require("passport");
+var passportConf = require("../config/passport");
 var User = require("../models/user");
 var middleware = require("../middleware");
 var Category = require('../models/category');
@@ -46,13 +47,40 @@ router.get("/personal/:id", middleware.isLoggedIn, function (req, res) {
     //         res.render("personal", { restaurants: allRestaurants});
     //     }
     // })
-    Restaurant.find({ 'author.id': req.params.id }).populate("comments").exec(function (err, allRestaurants) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(allRestaurants);
-            res.render("personal", { restaurants: allRestaurants });
+    async.waterfall([
+        function (callback) {
+            Restaurant.find({ 'author.id': req.params.id }, function (err, allRestaurants) {
+                if (err) {
+                    console.log(err);
+                }
+                else if (allRestaurants.length == 0) {
+                    return next();
+                }
+                else {
+                    // res.render("personal", { restaurants: allRestaurants  });
+                    callback(err, allRestaurants);
+                }
+            })
+        },
+        function (allRestaurants) {
+            User.find({ _id: req.params.id })
+                .populate("author")
+                .populate("history")
+                .exec(function (err, data) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(data);
+                        res.render("personal", { user: data, restaurants: allRestaurants });
+                    }
+                })
         }
+    ], function (err) {
+        console.log('personal');
+        if (err) {
+            next(err);
+        }
+        // res.json({ message: data });
     })
 })
 
@@ -180,19 +208,19 @@ router.get('/products/:id', function (req, res, next) {
 
 router.get('/product/:id', function (req, res, next) {
     Product.findById({ _id: req.params.id }, function (err, product) {
-        if (err){
+        if (err) {
             // console.log('err');
             return next(err);
         }
         // wrong id will in here
-        if(product == null){
+        if (product == null) {
             return next();
         }
         // console.log('err2');
         res.render('main/product', {
             product: product
         });
-    }).catch((err)=>{
+    }).catch((err) => {
         // console.log(err);
         // err in here
         return next(err);
@@ -202,7 +230,13 @@ router.get('/product/:id', function (req, res, next) {
 router.post('/product/:product_id', function (req, res, next) {
     if (!req.user) {
         // req.flash("success", "Logged you out!");
-        return next();
+        localStorage.setItem("goods", {
+            item: req.body.product_id,
+            price: parseFloat(req.body.priceValue),
+            quantity: parseInt(req.body.quantity)
+        })
+        return res.redirect('/cart');
+        // return next();
         // return res.redirect('/login');
     } else {
         Cart.findOne({ owner: req.user._id }, function (err, cart) {
@@ -227,7 +261,11 @@ router.get('/cart', function (req, res, next) {
     // console.log(req.currentUser);
     if (!req.user) {
         // req.flash("success", "Logged you out!");
-        return next();
+        res.render('main/cart', {
+            foundCart: foundCart,
+            // message: req.flash('remove')
+        })
+        // return next();
         // return res.redirect('/login');
     } else {
         Cart
@@ -245,8 +283,21 @@ router.get('/cart', function (req, res, next) {
     }
 });
 
+router.post('/remove', function (req, res, next) {
+    Cart.findOne({ owner: req.user._id }, function (err, foundCart) {
+        foundCart.items.pull(String(req.body.item));
 
-router.post('/payment', function (req, res, next) {
+        foundCart.total = (foundCart.total - parseFloat(req.body.price)).toFixed(2);
+        foundCart.save(function (err, found) {
+            if (err) return next(err);
+            req.flash('remove', 'Successfully removed');
+            res.redirect('/cart');
+        });
+    });
+});
+
+
+router.post('/payment', middleware.isLoggedIn, function (req, res, next) {
     var stripeToken = req.body.stripeToken;
     var currentCharges = Math.round(req.body.stripeMoney * 100);
     stripe.customers.create({
@@ -296,6 +347,17 @@ router.post('/payment', function (req, res, next) {
             res.json({ message: data });
         });
     })
+});
+
+router.get('/profile', passportConf.isAuthenticated, function (req, res, next) {
+    User
+        .findOne({ _id: req.user._id })
+        .populate('history.item')
+        .exec(function (err, foundUser) {
+            if (err) return next(err);
+
+            res.render('accounts/profile', { user: foundUser });
+        });
 });
 
 module.exports = router;
