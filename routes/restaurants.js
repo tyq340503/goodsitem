@@ -6,7 +6,7 @@ var middleware = require("../middleware");
 //var postfile = require("../middleware/postfile");
 var NodeGeocoder = require('node-geocoder');
 var formidable = require('formidable');
-var sys = require('sys');
+var sys = require('util');
 
 var options = {
     provider: 'google',
